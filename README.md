@@ -7,6 +7,14 @@
 
 ---
 
+## 🌐 在线展示站
+
+**[每天认识一位科学家 · One Scientist A Day](https://gengyueworks.github.io/one-scientist-a-day/)**
+
+52 篇人物特写，覆盖物理、数学、化学、生物、天文、医学、计算机等 17 个领域，按月份与领域浏览，每篇都是原创叙事散文（800-1200 字）。
+
+---
+
 ## 📅 今日科学家
 
 <!-- SCIENTIST-DAILY:BEGIN -->
@@ -21,39 +29,46 @@
 
 一个日更型科学家人物库，每天按日期推送一位科学家：
 
-- **日期锚点**：每位科学家的卡片挂在他的诞辰/忌日/重大成就日
-- **短卡为主**：一句话定位 + 关键故事 + 一个细节 + 一句引语（400-700 字）
-- **重点人物长文**：牛顿、居里、爱因斯坦、图灵这类，单独写深度特写
-- **自动更新**：GitHub Actions 每天北京时间早 8 点自动跑，写入 README + 归档
+- **日期锚点**：每位科学家的文章挂在他的诞辰/忌日/重大成就日
+- **原创叙事散文**：不讲百科履历，只讲关键时刻、关键选择与代价（800-1200 字）
+- **重点人物长文**：牛顿、居里、爱因斯坦、图灵这类，单独写深度特写（1500-2500 字）
+- **自动更新**：GitHub Actions 每天自动跑，写入 README + 归档 + 重建展示站
 
 选题池（372 位科学家，覆盖全年 366 天）在 [`data/pool.json`](data/pool.json)。
 
 ## 目录结构
 
 ```
-├── scientists/               # 已写好的卡片
+├── scientists/               # 已写好的文章
 │   └── MM/
 │       └── MM-DD-slug.md
+├── index.html                # 展示站（GitHub Pages 自动构建）
 ├── archive/                  # 每日归档
 ├── data/
 │   └── pool.json             # 选题池（366 天全覆盖）
 ├── _meta/
-│   └── card-template.md      # 卡片模板 + 写作纪律
+│   ├── card-template.md      # 文章写作规范（精品标准）
+│   └── top50.json            # 重点人物名单
 ├── scripts/
-│   └── daily_pick.py         # 每日挑选引擎
+│   ├── daily_pick.py         # 每日挑选引擎
+│   └── build_site.py         # 展示站构建脚本
 ├── .github/workflows/
-│   └── daily.yml             # 每日自动更新
+│   ├── daily.yml             # 每日自动更新
+│   └── pages.yml             # 展示站自动部署
 └── README.md
 ```
 
 ## 浏览
 
-- 按月份浏览已写卡：`scientists/MM/`
+- 在线展示站：[One Scientist A Day](https://gengyueworks.github.io/one-scientist-a-day/)
+- 按月份浏览文章：`scientists/MM/`
 - 全部选题池：`data/pool.json`
 
-## 卡片示例
+## 文章示例
 
-- [霍金｜1月8日诞辰](scientists/01/01-08-hawking.md)
+- [牛顿｜一个不肯开口的天才](scientists/01/01-04-newton.md)
+- [图灵｜那个让机器开始思考的人](scientists/06/06-23-turing.md)
+- [居里｜她把自己也搭了进去](scientists/11/11-07-curie.md)
 
 ## 选题来源说明
 

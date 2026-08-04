@@ -1,0 +1,41 @@
+name: Deploy Site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scientists/**'
+      - 'scripts/build_site.py'
+      - '_meta/site-style.css'
+      - 'index.html'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build static site
+        run: |
+          python3 scripts/build_site.py
+          mkdir -p site
+          cp index.html site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -21,6 +21,9 @@ jobs:
       - name: Run daily pick
         run: python3 scripts/daily_pick.py
 
+      - name: Rebuild static site
+        run: python3 scripts/build_site.py
+
       - name: Commit and push
         run: |
           git config user.name "one-scientist-bot"
