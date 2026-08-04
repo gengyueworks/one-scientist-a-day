@@ -254,6 +254,158 @@ main {
   line-height: 1.9;
 }
 
+/* ---------- 今日科学家 ---------- */
+.today {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.today-kicker {
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 14px;
+}
+.today-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #20242B 0%, #101318 100%);
+  color: #F5F2EA;
+  border-radius: 16px;
+  padding: 44px 48px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  position: relative;
+  overflow: hidden;
+}
+.today-card::after {
+  content: "";
+  position: absolute;
+  right: -60px;
+  top: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(176,58,46,0.35), transparent 70%);
+}
+.today-card:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(16,19,24,0.28); }
+.today-left { position: relative; z-index: 2; max-width: 70%; }
+.today-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: #D8B49A;
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
+}
+.today-left h3 {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3.4vw, 34px);
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.today-desc { font-size: 15px; color: #B9B4A8; line-height: 1.6; }
+.today-cta {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #F5F2EA;
+  border-bottom: 1px solid #D8B49A;
+  padding-bottom: 2px;
+}
+.today-cta.muted { color: #8A857A; border-bottom-color: transparent; }
+.today-right {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.today-bigdate {
+  font-family: var(--serif);
+  font-size: clamp(72px, 10vw, 110px);
+  font-weight: 700;
+  line-height: 1;
+  color: #F5F2EA;
+}
+.today-month {
+  font-size: 14px;
+  letter-spacing: 0.4em;
+  color: #B9B4A8;
+  text-transform: uppercase;
+}
+.today-loading { text-align: center; color: var(--ink-2); padding: 30px; }
+
+/* ---------- 名人堂 ---------- */
+.hall {
+  max-width: 1100px;
+  margin: 56px auto 0;
+  padding: 0 24px;
+}
+.section-head {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+}
+.hall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.hall-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 26px 22px 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+.hall-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(26,26,26,0.08);
+}
+.hall-num {
+  position: absolute;
+  top: 8px; right: 14px;
+  font-family: var(--serif);
+  font-size: 42px;
+  font-weight: 700;
+  color: rgba(26,26,26,0.06);
+  line-height: 1;
+}
+.hall-card h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.hall-card p {
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.hall-date {
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+  .today-card { padding: 30px 24px; flex-direction: column; gap: 20px; }
+  .today-left { max-width: 100%; }
+  .hall-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+
 @media (max-width: 640px) {
   .hero { padding-top: 60px; }
   .modal { padding: 36px 24px 44px; }

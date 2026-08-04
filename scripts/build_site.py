@@ -84,6 +84,13 @@ def main():
     # 生成 HTML
     css = open(os.path.join(ROOT, "_meta", "site-style.css"), encoding="utf-8").read() if os.path.exists(os.path.join(ROOT, "_meta", "site-style.css")) else ""
     js_data = json.dumps(articles, ensure_ascii=False)
+    pool_slim = []
+    for r in json.load(open(pool_path, encoding="utf-8")):
+        if "date" in r and "person" in r:
+            pool_slim.append({"date": r["date"], "person": r["person"],
+                              "field": r.get("field", ""), "type": r.get("type", ""),
+                              "one_line": r.get("one_line", "")})
+    pool_data = json.dumps(pool_slim, ensure_ascii=False)
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -107,6 +114,16 @@ def main():
   </div>
 </header>
 
+<section class="today" id="today">
+  <p class="today-kicker" id="today-kicker">今天认识谁</p>
+  <div id="today-content"><p class="today-loading">加载中……</p></div>
+</section>
+
+<section class="hall" id="hall">
+  <h2 class="section-head">🏛 名人堂 · 十二位改变世界的人</h2>
+  <div class="hall-grid" id="hall-grid"></div>
+</section>
+
 <nav class="field-nav" id="field-nav"></nav>
 
 <main id="gallery"></main>
@@ -120,13 +137,93 @@ def main():
 {js_data}
 </script>
 
+<!-- 选题池数据 -->
+<script id="pool-data" type="application/json">
+{pool_data}
+</script>
+
 <script>
 const ARTICLES = JSON.parse(document.getElementById('articles-data').textContent);
+const POOL = JSON.parse(document.getElementById('pool-data').textContent);
 const FIELDS = {json.dumps(fields, ensure_ascii=False)};
 
 document.getElementById('stat-n').textContent = ARTICLES.length;
 document.getElementById('stat-f').textContent = FIELDS.length;
 document.getElementById('stat-m').textContent = new Set(ARTICLES.map(a=>a.date.slice(0,2))).size;
+
+/* ---------- 今日科学家 ---------- */
+function todayString() {{
+  const d = new Date();
+  return ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+}}
+function renderToday() {{
+  const t = todayString();
+  const a = ARTICLES.find(x => x.date === t);
+  const el = document.getElementById('today-content');
+  const kicker = document.getElementById('today-kicker');
+  if (a) {{
+    kicker.textContent = '今天 · ' + a.date.slice(0,2) + '月' + a.date.slice(3) + '日';
+    el.innerHTML = `<div class="today-card today-done" data-slug="${{a.slug}}">
+      <div class="today-left">
+        <p class="today-name">${{esc(a.subtitle.split('｜')[0])}}</p>
+        <h3>${{esc(a.title)}}</h3>
+        <p class="today-desc">${{esc(a.subtitle)}}</p>
+        <span class="today-cta">点开，读他的一生 →</span>
+      </div>
+      <div class="today-right">
+        <span class="today-bigdate">${{a.date.slice(3)}}</span>
+        <span class="today-month">${{a.date.slice(0,2)}}月</span>
+      </div>
+    </div>`;
+    el.querySelector('.today-card').onclick = () => openArticle(a.slug);
+  }} else {{
+    const p = POOL.find(x => x.date === t.replace('-','/'));
+    kicker.textContent = '今天 · ' + aDateCN(t);
+    if (p) {{
+      const ty = {{'birth':'诞辰','death':'忌日','event':'事件'}}[p.type] || '';
+      el.innerHTML = `<div class="today-card today-preview">
+        <div class="today-left">
+          <p class="today-name">${{esc(p.person)}}</p>
+          <h3>${{esc(p.one_line)}}</h3>
+          <p class="today-desc">${{esc(p.field)}} · ${{ty}}</p>
+          <span class="today-cta muted">今天这篇还在写，明天见</span>
+        </div>
+        <div class="today-right">
+          <span class="today-bigdate">${{t.slice(3)}}</span>
+          <span class="today-month">${{t.slice(0,2)}}月</span>
+        </div>
+      </div>`;
+    }} else {{
+      el.innerHTML = `<div class="today-card today-preview">
+        <div class="today-left"><p class="today-name">今天</p><h3>没有特别的日子</h3>
+        <p class="today-desc">但科学每天都在发生</p></div>
+        <div class="today-right"><span class="today-bigdate">${{t.slice(3)}}</span><span class="today-month">${{t.slice(0,2)}}月</span></div>
+      </div>`;
+    }}
+  }}
+}}
+function aDateCN(t) {{ return t.slice(0,2) + '月' + t.slice(3) + '日'; }}
+renderToday();
+
+/* ---------- 名人堂 ---------- */
+const HALL = [
+  "01-04","02-12","03-14","04-15","05-11","06-23","07-10","08-26","09-22","10-25","11-07","12-27"
+];
+function renderHall() {{
+  const grid = document.getElementById('hall-grid');
+  const people = HALL.map(d => ARTICLES.find(x => x.date === d)).filter(Boolean);
+  grid.innerHTML = people.map((a,i) => {{
+    const name = a.subtitle.split('｜')[0];
+    return `<article class="hall-card" data-slug="${{a.slug}}" style="--n:${{i+1}}">
+      <span class="hall-num">0${{i+1}}</span>
+      <h3>${{esc(name)}}</h3>
+      <p>${{esc(a.title)}}</p>
+      <span class="hall-date">${{a.date.slice(0,2)}}月${{a.date.slice(3)}}日</span>
+    </article>`;
+  }}).join('');
+  grid.querySelectorAll('.hall-card').forEach(c => c.onclick = () => openArticle(c.dataset.slug));
+}}
+renderHall();
 
 const nav = document.getElementById('field-nav');
 const allBtn = document.createElement('button');
