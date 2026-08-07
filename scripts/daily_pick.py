@@ -65,7 +65,7 @@ def render_today(entries, card_files):
             f"## {name}｜{e['date']} {ty}\n\n"
             f"**领域**：{e['field']}\n\n"
             f"> {e['one_line']}\n\n"
-            f"（卡片写作中……）\n"
+            f"（完整人物故事筹备中，敬请期待）\n"
         )
     return "\n\n".join(parts)
 
