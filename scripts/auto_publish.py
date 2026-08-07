@@ -169,6 +169,9 @@ def validate_card(content):
     bad = re.findall(r"[\u4e00-\u9fff][,.;!?]", content)
     if bad:
         problems.append(f"中文后跟英文标点: {bad[:5]}")
+    ascii_quotes = re.findall(r'"([^"]{1,40})"', content)
+    if ascii_quotes:
+        problems.append(f"含 ASCII 双引号（应改用中文引号“”）：{ascii_quotes[:3]}")
     if content.count("——") > 3:
         problems.append("破折号超过 3 个")
     return (not problems), problems
